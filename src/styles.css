@@ -1,0 +1,133 @@
+@import 'tailwindcss';
+
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+code {
+  font-family:
+    source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+:root {
+  --background: #121a2b; /* Deep Navy */
+  --foreground: #ffffff; /* Pure White */
+  --card: #121a2b; /* Deep Navy */
+  --card-foreground: #ffffff; /* Pure White */
+  --popover: #121a2b; /* Deep Navy */
+  --popover-foreground: #ffffff; /* Pure White */
+  --primary: #0affff; /* Cyan Blue */
+  --primary-foreground: #121a2b; /* Deep Navy */
+  --secondary: #8a2be2; /* Electric Purple */
+  --secondary-foreground: #ffffff; /* Pure White */
+  --muted: #8a2be2; /* Electric Purple */
+  --muted-foreground: #ffffff; /* Pure White */
+  --accent: #8a2be2; /* Electric Purple */
+  --accent-foreground: #ffffff; /* Pure White */
+  --destructive: #dc143c; /* Crimson Red */
+  --destructive-foreground: #ffffff; /* Pure White */
+  --border: #1a1a1a; /* Dark Gray */
+  --input: #1a1a1a; /* Dark Gray */
+  --ring: #0affff; /* Cyan Blue */
+  --chart-1: #39ff14; /* Neon Green */
+  --chart-2: #39ff14; /* Neon Green */
+  --chart-3: #ffbf00; /* Amber */
+  --chart-4: #dc143c; /* Crimson Red */
+  --chart-5: #ffbf00; /* Amber */
+  --radius: 0.625rem;
+  --sidebar: #0affff; /* Cyan Blue */
+  --sidebar-foreground: #121a2b; /* Deep Navy */
+  --sidebar-primary: #0affff; /* Cyan Blue */
+  --sidebar-primary-foreground: #121a2b; /* Deep Navy */
+  --sidebar-accent: #8a2be2; /* Electric Purple */
+  --sidebar-accent-foreground: #ffffff; /* Pure White */
+  --sidebar-border: #1a1a1a; /* Dark Gray */
+  --sidebar-ring: #0affff; /* Cyan Blue */
+}
+
+.dark {
+  --background: #0affff; /* Cyan Blue */
+  --foreground: #121a2b; /* Deep Navy */
+  --card: #0affff; /* Cyan Blue */
+  --card-foreground: #121a2b; /* Deep Navy */
+  --popover: #0affff; /* Cyan Blue */
+  --popover-foreground: #121a2b; /* Deep Navy */
+  --primary: #ffffff; /* Pure White */
+  --primary-foreground: #121a2b; /* Deep Navy */
+  --secondary: #8a2be2; /* Electric Purple */
+  --secondary-foreground: #121a2b; /* Deep Navy */
+  --muted: #8a2be2; /* Electric Purple */
+  --muted-foreground: #ffffff; /* Pure White */
+  --accent: #8a2be2; /* Electric Purple */
+  --accent-foreground: #121a2b; /* Deep Navy */
+  --destructive: #dc143c; /* Crimson Red */
+  --destructive-foreground: #ffffff; /* Pure White */
+  --border: #8a2be2; /* Electric Purple */
+  --input: #8a2be2; /* Electric Purple */
+  --ring: #39ff14; /* Neon Green */
+  --chart-1: #39ff14; /* Neon Green */
+  --chart-2: #ffbf00; /* Amber */
+  --chart-3: #ffbf00; /* Amber */
+  --chart-4: #dc143c; /* Crimson Red */
+  --chart-5: #39ff14; /* Neon Green */
+  --sidebar: #121a2b; /* Deep Navy */
+  --sidebar-foreground: #ffffff; /* Pure White */
+  --sidebar-primary: #8a2be2; /* Electric Purple */
+  --sidebar-primary-foreground: #ffffff; /* Pure White */
+  --sidebar-accent: #0affff; /* Cyan Blue */
+  --sidebar-accent-foreground: #121a2b; /* Deep Navy */
+  --sidebar-border: #1a1a1a; /* Dark Gray */
+  --sidebar-ring: #39ff14; /* Neon Green */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
