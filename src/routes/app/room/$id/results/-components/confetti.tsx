@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { celebrationVariants } from "./animations"
+import React from "react";
 
 interface ConfettiProps {
   success: boolean
@@ -41,13 +42,13 @@ function ConfettiPiece({ delay, left }: { delay: number, left: string }) {
 }
 
 export function Confetti({ success }: ConfettiProps) {
-  const [pieces, setPieces] = useState<JSX.Element[]>([]);
+  const [pieces, setPieces] = useState<React.JSX.Element[]>([]);
   
   useEffect(() => {
     if (!success) return;
     
     // Generate confetti pieces only if mission was successful
-    const confettiPieces: JSX.Element[] = [];
+    const confettiPieces: React.JSX.Element[] = [];
     const totalPieces = 150;
     
     for (let i = 0; i < totalPieces; i++) {
