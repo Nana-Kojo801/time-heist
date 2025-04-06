@@ -18,6 +18,8 @@ import { ProfileHeader } from './-components/profile-header'
 import { AchievementsSection } from './-components/achievements-section'
 import { AbilitiesSection } from './-components/abilities-section'
 import { StatsSection } from './-components/stats-section'
+import { GoogleAdsense } from '@/components/GoogleAdsense'
+import { AdUnit } from '@/components/AdUnit'
 import type { UserData } from './-components/types'
 
 export const Route = createFileRoute('/app/profile/')({
@@ -25,6 +27,9 @@ export const Route = createFileRoute('/app/profile/')({
 })
 
 function RouteComponent() {
+  // Google AdSense publisher ID
+  const publisherId = import.meta.env.VITE_ADSENSE_CLIENT || 'ca-pub-XXXXXXXXXXXXXXXX'
+  
   // Mock user data
   const user: UserData = {
     username: 'TimeJumper',
@@ -119,6 +124,9 @@ function RouteComponent() {
       transition={{ duration: 0.5 }}
       className="min-h-screen flex flex-col bg-background text-foreground relative overflow-hidden"
     >
+      {/* Initialize Google AdSense */}
+      <GoogleAdsense client={publisherId} />
+      
       {/* Background elements */}
       <DecorativeBackground />
 
@@ -137,6 +145,16 @@ function RouteComponent() {
             accuracy={user.accuracy}
             wins={user.wins}
           />
+          
+          {/* Top banner ad */}
+          <div className="w-full my-4">
+            <AdUnit 
+              slot="1234567890" // Replace with your actual ad slot ID
+              format="auto"
+              responsive={true}
+              className="w-full min-h-[90px] bg-muted/5 border border-muted/10 rounded-md"
+            />
+          </div>
 
           {/* Tabbed content sections */}
           <motion.div
@@ -150,12 +168,32 @@ function RouteComponent() {
 
             {/* Abilities Section */}
             <AbilitiesSection abilities={user.abilities} />
+            
+            {/* Mid-page in-article ad */}
+            <div className="w-full my-2">
+              <AdUnit 
+                slot="2345678901" // Replace with your actual ad slot ID
+                format="fluid"
+                responsive={true}
+                className="w-full min-h-[120px] bg-muted/5 border border-muted/10 rounded-md"
+              />
+            </div>
 
             {/* Stats Section */}
             <StatsSection
               roles={user.stats.roles}
               recentGames={user.stats.recentGames}
             />
+            
+            {/* Bottom banner ad */}
+            <div className="w-full mt-6">
+              <AdUnit 
+                slot="3456789012" // Replace with your actual ad slot ID
+                format="auto"
+                responsive={true}
+                className="w-full min-h-[90px] bg-muted/5 border border-muted/10 rounded-md"
+              />
+            </div>
           </motion.div>
         </div>
       </div>

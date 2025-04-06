@@ -22,6 +22,7 @@ import { Route as AppProfileIndexImport } from './routes/app/profile/index'
 import { Route as AppJoinRoomIndexImport } from './routes/app/join-room/index'
 import { Route as AppEditProfileIndexImport } from './routes/app/edit-profile/index'
 import { Route as AppCreateRoomIndexImport } from './routes/app/create-room/index'
+import { Route as AppAdsExampleIndexImport } from './routes/app/ads-example/index'
 import { Route as AppRoomIdIndexImport } from './routes/app/room/$id/index'
 import { Route as AppRoomIdResultsIndexImport } from './routes/app/room/$id/results/index'
 import { Route as AppRoomIdGameIndexImport } from './routes/app/room/$id/game/index'
@@ -91,6 +92,12 @@ const AppEditProfileIndexRoute = AppEditProfileIndexImport.update({
 const AppCreateRoomIndexRoute = AppCreateRoomIndexImport.update({
   id: '/app/create-room/',
   path: '/app/create-room/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const AppAdsExampleIndexRoute = AppAdsExampleIndexImport.update({
+  id: '/app/ads-example/',
+  path: '/app/ads-example/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -169,6 +176,13 @@ declare module '@tanstack/react-router' {
       path: '/app'
       fullPath: '/app'
       preLoaderRoute: typeof AppIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/app/ads-example/': {
+      id: '/app/ads-example/'
+      path: '/app/ads-example'
+      fullPath: '/app/ads-example'
+      preLoaderRoute: typeof AppAdsExampleIndexImport
       parentRoute: typeof rootRoute
     }
     '/app/create-room/': {
@@ -266,6 +280,7 @@ export interface FileRoutesByFullPath {
   '/auth/signup': typeof AuthSignupRoute
   '/': typeof RootLayoutIndexRoute
   '/app': typeof AppIndexRoute
+  '/app/ads-example': typeof AppAdsExampleIndexRoute
   '/app/create-room': typeof AppCreateRoomIndexRoute
   '/app/edit-profile': typeof AppEditProfileIndexRoute
   '/app/join-room': typeof AppJoinRoomIndexRoute
@@ -283,6 +298,7 @@ export interface FileRoutesByTo {
   '/auth/signup': typeof AuthSignupRoute
   '/': typeof RootLayoutIndexRoute
   '/app': typeof AppIndexRoute
+  '/app/ads-example': typeof AppAdsExampleIndexRoute
   '/app/create-room': typeof AppCreateRoomIndexRoute
   '/app/edit-profile': typeof AppEditProfileIndexRoute
   '/app/join-room': typeof AppJoinRoomIndexRoute
@@ -302,6 +318,7 @@ export interface FileRoutesById {
   '/auth/signup': typeof AuthSignupRoute
   '/_root-layout/': typeof RootLayoutIndexRoute
   '/app/': typeof AppIndexRoute
+  '/app/ads-example/': typeof AppAdsExampleIndexRoute
   '/app/create-room/': typeof AppCreateRoomIndexRoute
   '/app/edit-profile/': typeof AppEditProfileIndexRoute
   '/app/join-room/': typeof AppJoinRoomIndexRoute
@@ -322,6 +339,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/'
     | '/app'
+    | '/app/ads-example'
     | '/app/create-room'
     | '/app/edit-profile'
     | '/app/join-room'
@@ -338,6 +356,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/'
     | '/app'
+    | '/app/ads-example'
     | '/app/create-room'
     | '/app/edit-profile'
     | '/app/join-room'
@@ -355,6 +374,7 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/_root-layout/'
     | '/app/'
+    | '/app/ads-example/'
     | '/app/create-room/'
     | '/app/edit-profile/'
     | '/app/join-room/'
@@ -370,6 +390,7 @@ export interface RootRouteChildren {
   RootLayoutRoute: typeof RootLayoutRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
+  AppAdsExampleIndexRoute: typeof AppAdsExampleIndexRoute
   AppCreateRoomIndexRoute: typeof AppCreateRoomIndexRoute
   AppEditProfileIndexRoute: typeof AppEditProfileIndexRoute
   AppJoinRoomIndexRoute: typeof AppJoinRoomIndexRoute
@@ -384,6 +405,7 @@ const rootRouteChildren: RootRouteChildren = {
   RootLayoutRoute: RootLayoutRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
+  AppAdsExampleIndexRoute: AppAdsExampleIndexRoute,
   AppCreateRoomIndexRoute: AppCreateRoomIndexRoute,
   AppEditProfileIndexRoute: AppEditProfileIndexRoute,
   AppJoinRoomIndexRoute: AppJoinRoomIndexRoute,
@@ -407,6 +429,7 @@ export const routeTree = rootRoute
         "/_root-layout",
         "/auth",
         "/app/",
+        "/app/ads-example/",
         "/app/create-room/",
         "/app/edit-profile/",
         "/app/join-room/",
@@ -449,6 +472,9 @@ export const routeTree = rootRoute
     },
     "/app/": {
       "filePath": "app/index.tsx"
+    },
+    "/app/ads-example/": {
+      "filePath": "app/ads-example/index.tsx"
     },
     "/app/create-room/": {
       "filePath": "app/create-room/index.tsx"
