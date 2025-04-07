@@ -18,7 +18,6 @@ import { ProfileHeader } from './-components/profile-header'
 import { AchievementsSection } from './-components/achievements-section'
 import { AbilitiesSection } from './-components/abilities-section'
 import { StatsSection } from './-components/stats-section'
-import { AdUnit } from '@/components/AdUnit'
 import type { UserData } from './-components/types'
 
 export const Route = createFileRoute('/app/profile/')({
@@ -152,16 +151,6 @@ function RouteComponent() {
             {/* Abilities Section */}
             <AbilitiesSection abilities={user.abilities} />
             
-            {/* Mid-page in-article ad */}
-            <div className="w-full my-2">
-              <AdUnit 
-                slot="2345678901" // Replace with your actual ad slot ID
-                format="fluid"
-                responsive={true}
-                className="w-full min-h-[120px] bg-muted/5 border border-muted/10 rounded-md"
-              />
-            </div>
-
             {/* Stats Section */}
             <StatsSection
               roles={user.stats.roles}
