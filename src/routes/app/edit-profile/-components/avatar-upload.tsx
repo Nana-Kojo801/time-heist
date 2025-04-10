@@ -5,11 +5,12 @@ import { motion } from "framer-motion"
 import { itemVariants } from "./animations"
 
 interface AvatarUploadProps {
-  previewAvatar: string
+  previewAvatar: string;
+  username: string;
   onFileUpload: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-export function AvatarUpload({ previewAvatar, onFileUpload }: AvatarUploadProps) {
+export function AvatarUpload({ previewAvatar, onFileUpload, username }: AvatarUploadProps) {
   return (
     <motion.div 
       variants={itemVariants}
@@ -27,25 +28,18 @@ export function AvatarUpload({ previewAvatar, onFileUpload }: AvatarUploadProps)
           <div className="absolute -inset-2 bg-gradient-to-r from-primary/20 via-secondary/20 to-primary/20 rounded-full blur-md opacity-70 group-hover:opacity-100 transition-opacity" />
           <Avatar className="w-32 h-32 border-2 border-primary/30 group-hover:border-primary/60 transition-all duration-300 relative z-10">
             <AvatarImage
-              src={
-                typeof previewAvatar === 'string' &&
-                previewAvatar.startsWith('data:')
-                  ? previewAvatar
-                  : undefined
-              }
+              src={previewAvatar}
+              className="object-cover object-center"
             />
             <AvatarFallback className="text-5xl bg-card/80 backdrop-blur-sm">
-              {typeof previewAvatar === 'string' &&
-              !previewAvatar.startsWith('data:')
-                ? previewAvatar
-                : '🕰️'}
+              {username.charAt(0)}
             </AvatarFallback>
           </Avatar>
         </motion.div>
         <motion.label
           whileHover={{ scale: 1.1, boxShadow: "0 0 15px rgba(10, 255, 255, 0.5)" }}
           whileTap={{ scale: 0.95 }}
-          className="absolute -bottom-3 -right-3 bg-gradient-to-r from-primary to-secondary text-primary-foreground p-3 rounded-full cursor-pointer shadow-lg transition-all"
+          className="absolute z-10 -bottom-3 -right-3 bg-gradient-to-r from-primary to-secondary text-primary-foreground p-3 rounded-full cursor-pointer shadow-lg transition-all"
         >
           <Upload className="w-5 h-5" />
           <input

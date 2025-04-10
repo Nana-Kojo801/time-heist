@@ -16,7 +16,6 @@ import { DecorativeBackground } from './-components/decorative-background'
 import { PageHeader } from './-components/page-header'
 import { ProfileHeader } from './-components/profile-header'
 import { AchievementsSection } from './-components/achievements-section'
-import { AbilitiesSection } from './-components/abilities-section'
 import { StatsSection } from './-components/stats-section'
 import type { UserData } from './-components/types'
 
@@ -128,13 +127,10 @@ function RouteComponent() {
       <div className="flex-1 flex flex-col items-center px-4 sm:px-6 py-4 overflow-y-auto relative z-10">
         <div className="w-full max-w-2xl">
           {/* User profile header */}
-          <ProfileHeader 
+          <ProfileHeader
             username={user.username}
             avatar={user.avatar}
-            level={user.level}
-            points={user.points}
             gamesPlayed={user.gamesPlayed}
-            accuracy={user.accuracy}
             wins={user.wins}
           />
 
@@ -148,14 +144,8 @@ function RouteComponent() {
             {/* Achievements Section */}
             <AchievementsSection achievements={user.achievements} />
 
-            {/* Abilities Section */}
-            <AbilitiesSection abilities={user.abilities} />
-            
             {/* Stats Section */}
-            <StatsSection
-              roles={user.stats.roles}
-              recentGames={user.stats.recentGames}
-            />
+            <StatsSection />
           </motion.div>
         </div>
       </div>

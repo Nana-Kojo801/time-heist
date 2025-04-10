@@ -4,15 +4,15 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { containerVariants, itemVariants } from "./animations"
 import { roleDetails, type RoleKey } from "./role-details"
-import type { Player } from "./types"
+import { useRoom } from "../../-utils"
 
 interface RoleSelectionProps {
-  players: Player[]
   selectedRole: string
   setSelectedRole: (role: RoleKey) => void
 }
 
-export function RoleSelection({ players, selectedRole, setSelectedRole }: RoleSelectionProps) {
+export function RoleSelection({ selectedRole, setSelectedRole }: RoleSelectionProps) {
+  const room = useRoom()
   return (
     <motion.div 
       variants={itemVariants}
@@ -31,7 +31,7 @@ export function RoleSelection({ players, selectedRole, setSelectedRole }: RoleSe
         variants={containerVariants}
       >
         {Object.entries(roleDetails).map(([role, details]) => {
-          const isAvailable = !players.some(p => p.role === role);
+          const isAvailable = !room.members.some(p => p.role === role);
           
           return (
             <motion.div 

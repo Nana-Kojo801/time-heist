@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as AuthImport } from './routes/auth'
+import { Route as AppImport } from './routes/app'
 import { Route as RootLayoutImport } from './routes/_root-layout'
 import { Route as AppIndexImport } from './routes/app/index'
 import { Route as RootLayoutIndexImport } from './routes/_root-layout/index'
@@ -22,7 +23,7 @@ import { Route as AppProfileIndexImport } from './routes/app/profile/index'
 import { Route as AppJoinRoomIndexImport } from './routes/app/join-room/index'
 import { Route as AppEditProfileIndexImport } from './routes/app/edit-profile/index'
 import { Route as AppCreateRoomIndexImport } from './routes/app/create-room/index'
-import { Route as AppAdsExampleIndexImport } from './routes/app/ads-example/index'
+import { Route as AppRoomIdImport } from './routes/app/room/$id'
 import { Route as AppRoomIdIndexImport } from './routes/app/room/$id/index'
 import { Route as AppRoomIdResultsIndexImport } from './routes/app/room/$id/results/index'
 import { Route as AppRoomIdGameIndexImport } from './routes/app/room/$id/game/index'
@@ -36,15 +37,21 @@ const AuthRoute = AuthImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AppRoute = AppImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const RootLayoutRoute = RootLayoutImport.update({
   id: '/_root-layout',
   getParentRoute: () => rootRoute,
 } as any)
 
 const AppIndexRoute = AppIndexImport.update({
-  id: '/app/',
-  path: '/app/',
-  getParentRoute: () => rootRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
 } as any)
 
 const RootLayoutIndexRoute = RootLayoutIndexImport.update({
@@ -72,57 +79,57 @@ const RootLayoutTutorialRoute = RootLayoutTutorialImport.update({
 } as any)
 
 const AppProfileIndexRoute = AppProfileIndexImport.update({
-  id: '/app/profile/',
-  path: '/app/profile/',
-  getParentRoute: () => rootRoute,
+  id: '/profile/',
+  path: '/profile/',
+  getParentRoute: () => AppRoute,
 } as any)
 
 const AppJoinRoomIndexRoute = AppJoinRoomIndexImport.update({
-  id: '/app/join-room/',
-  path: '/app/join-room/',
-  getParentRoute: () => rootRoute,
+  id: '/join-room/',
+  path: '/join-room/',
+  getParentRoute: () => AppRoute,
 } as any)
 
 const AppEditProfileIndexRoute = AppEditProfileIndexImport.update({
-  id: '/app/edit-profile/',
-  path: '/app/edit-profile/',
-  getParentRoute: () => rootRoute,
+  id: '/edit-profile/',
+  path: '/edit-profile/',
+  getParentRoute: () => AppRoute,
 } as any)
 
 const AppCreateRoomIndexRoute = AppCreateRoomIndexImport.update({
-  id: '/app/create-room/',
-  path: '/app/create-room/',
-  getParentRoute: () => rootRoute,
+  id: '/create-room/',
+  path: '/create-room/',
+  getParentRoute: () => AppRoute,
 } as any)
 
-const AppAdsExampleIndexRoute = AppAdsExampleIndexImport.update({
-  id: '/app/ads-example/',
-  path: '/app/ads-example/',
-  getParentRoute: () => rootRoute,
+const AppRoomIdRoute = AppRoomIdImport.update({
+  id: '/room/$id',
+  path: '/room/$id',
+  getParentRoute: () => AppRoute,
 } as any)
 
 const AppRoomIdIndexRoute = AppRoomIdIndexImport.update({
-  id: '/app/room/$id/',
-  path: '/app/room/$id/',
-  getParentRoute: () => rootRoute,
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoomIdRoute,
 } as any)
 
 const AppRoomIdResultsIndexRoute = AppRoomIdResultsIndexImport.update({
-  id: '/app/room/$id/results/',
-  path: '/app/room/$id/results/',
-  getParentRoute: () => rootRoute,
+  id: '/results/',
+  path: '/results/',
+  getParentRoute: () => AppRoomIdRoute,
 } as any)
 
 const AppRoomIdGameIndexRoute = AppRoomIdGameIndexImport.update({
-  id: '/app/room/$id/game/',
-  path: '/app/room/$id/game/',
-  getParentRoute: () => rootRoute,
+  id: '/game/',
+  path: '/game/',
+  getParentRoute: () => AppRoomIdRoute,
 } as any)
 
 const AppRoomIdChatIndexRoute = AppRoomIdChatIndexImport.update({
-  id: '/app/room/$id/chat/',
-  path: '/app/room/$id/chat/',
-  getParentRoute: () => rootRoute,
+  id: '/chat/',
+  path: '/chat/',
+  getParentRoute: () => AppRoomIdRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -134,6 +141,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: ''
       preLoaderRoute: typeof RootLayoutImport
+      parentRoute: typeof rootRoute
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppImport
       parentRoute: typeof rootRoute
     }
     '/auth': {
@@ -173,73 +187,73 @@ declare module '@tanstack/react-router' {
     }
     '/app/': {
       id: '/app/'
-      path: '/app'
-      fullPath: '/app'
+      path: '/'
+      fullPath: '/app/'
       preLoaderRoute: typeof AppIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AppImport
     }
-    '/app/ads-example/': {
-      id: '/app/ads-example/'
-      path: '/app/ads-example'
-      fullPath: '/app/ads-example'
-      preLoaderRoute: typeof AppAdsExampleIndexImport
-      parentRoute: typeof rootRoute
+    '/app/room/$id': {
+      id: '/app/room/$id'
+      path: '/room/$id'
+      fullPath: '/app/room/$id'
+      preLoaderRoute: typeof AppRoomIdImport
+      parentRoute: typeof AppImport
     }
     '/app/create-room/': {
       id: '/app/create-room/'
-      path: '/app/create-room'
+      path: '/create-room'
       fullPath: '/app/create-room'
       preLoaderRoute: typeof AppCreateRoomIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AppImport
     }
     '/app/edit-profile/': {
       id: '/app/edit-profile/'
-      path: '/app/edit-profile'
+      path: '/edit-profile'
       fullPath: '/app/edit-profile'
       preLoaderRoute: typeof AppEditProfileIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AppImport
     }
     '/app/join-room/': {
       id: '/app/join-room/'
-      path: '/app/join-room'
+      path: '/join-room'
       fullPath: '/app/join-room'
       preLoaderRoute: typeof AppJoinRoomIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AppImport
     }
     '/app/profile/': {
       id: '/app/profile/'
-      path: '/app/profile'
+      path: '/profile'
       fullPath: '/app/profile'
       preLoaderRoute: typeof AppProfileIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AppImport
     }
     '/app/room/$id/': {
       id: '/app/room/$id/'
-      path: '/app/room/$id'
-      fullPath: '/app/room/$id'
+      path: '/'
+      fullPath: '/app/room/$id/'
       preLoaderRoute: typeof AppRoomIdIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AppRoomIdImport
     }
     '/app/room/$id/chat/': {
       id: '/app/room/$id/chat/'
-      path: '/app/room/$id/chat'
+      path: '/chat'
       fullPath: '/app/room/$id/chat'
       preLoaderRoute: typeof AppRoomIdChatIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AppRoomIdImport
     }
     '/app/room/$id/game/': {
       id: '/app/room/$id/game/'
-      path: '/app/room/$id/game'
+      path: '/game'
       fullPath: '/app/room/$id/game'
       preLoaderRoute: typeof AppRoomIdGameIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AppRoomIdImport
     }
     '/app/room/$id/results/': {
       id: '/app/room/$id/results/'
-      path: '/app/room/$id/results'
+      path: '/results'
       fullPath: '/app/room/$id/results'
       preLoaderRoute: typeof AppRoomIdResultsIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof AppRoomIdImport
     }
   }
 }
@@ -260,6 +274,44 @@ const RootLayoutRouteWithChildren = RootLayoutRoute._addFileChildren(
   RootLayoutRouteChildren,
 )
 
+interface AppRoomIdRouteChildren {
+  AppRoomIdIndexRoute: typeof AppRoomIdIndexRoute
+  AppRoomIdChatIndexRoute: typeof AppRoomIdChatIndexRoute
+  AppRoomIdGameIndexRoute: typeof AppRoomIdGameIndexRoute
+  AppRoomIdResultsIndexRoute: typeof AppRoomIdResultsIndexRoute
+}
+
+const AppRoomIdRouteChildren: AppRoomIdRouteChildren = {
+  AppRoomIdIndexRoute: AppRoomIdIndexRoute,
+  AppRoomIdChatIndexRoute: AppRoomIdChatIndexRoute,
+  AppRoomIdGameIndexRoute: AppRoomIdGameIndexRoute,
+  AppRoomIdResultsIndexRoute: AppRoomIdResultsIndexRoute,
+}
+
+const AppRoomIdRouteWithChildren = AppRoomIdRoute._addFileChildren(
+  AppRoomIdRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppIndexRoute: typeof AppIndexRoute
+  AppRoomIdRoute: typeof AppRoomIdRouteWithChildren
+  AppCreateRoomIndexRoute: typeof AppCreateRoomIndexRoute
+  AppEditProfileIndexRoute: typeof AppEditProfileIndexRoute
+  AppJoinRoomIndexRoute: typeof AppJoinRoomIndexRoute
+  AppProfileIndexRoute: typeof AppProfileIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppIndexRoute: AppIndexRoute,
+  AppRoomIdRoute: AppRoomIdRouteWithChildren,
+  AppCreateRoomIndexRoute: AppCreateRoomIndexRoute,
+  AppEditProfileIndexRoute: AppEditProfileIndexRoute,
+  AppJoinRoomIndexRoute: AppJoinRoomIndexRoute,
+  AppProfileIndexRoute: AppProfileIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 interface AuthRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthSignupRoute: typeof AuthSignupRoute
@@ -274,18 +326,19 @@ const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
 export interface FileRoutesByFullPath {
   '': typeof RootLayoutRouteWithChildren
+  '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/tutorial': typeof RootLayoutTutorialRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/': typeof RootLayoutIndexRoute
-  '/app': typeof AppIndexRoute
-  '/app/ads-example': typeof AppAdsExampleIndexRoute
+  '/app/': typeof AppIndexRoute
+  '/app/room/$id': typeof AppRoomIdRouteWithChildren
   '/app/create-room': typeof AppCreateRoomIndexRoute
   '/app/edit-profile': typeof AppEditProfileIndexRoute
   '/app/join-room': typeof AppJoinRoomIndexRoute
   '/app/profile': typeof AppProfileIndexRoute
-  '/app/room/$id': typeof AppRoomIdIndexRoute
+  '/app/room/$id/': typeof AppRoomIdIndexRoute
   '/app/room/$id/chat': typeof AppRoomIdChatIndexRoute
   '/app/room/$id/game': typeof AppRoomIdGameIndexRoute
   '/app/room/$id/results': typeof AppRoomIdResultsIndexRoute
@@ -298,7 +351,6 @@ export interface FileRoutesByTo {
   '/auth/signup': typeof AuthSignupRoute
   '/': typeof RootLayoutIndexRoute
   '/app': typeof AppIndexRoute
-  '/app/ads-example': typeof AppAdsExampleIndexRoute
   '/app/create-room': typeof AppCreateRoomIndexRoute
   '/app/edit-profile': typeof AppEditProfileIndexRoute
   '/app/join-room': typeof AppJoinRoomIndexRoute
@@ -312,13 +364,14 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_root-layout': typeof RootLayoutRouteWithChildren
+  '/app': typeof AppRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
   '/_root-layout/tutorial': typeof RootLayoutTutorialRoute
   '/auth/login': typeof AuthLoginRoute
   '/auth/signup': typeof AuthSignupRoute
   '/_root-layout/': typeof RootLayoutIndexRoute
   '/app/': typeof AppIndexRoute
-  '/app/ads-example/': typeof AppAdsExampleIndexRoute
+  '/app/room/$id': typeof AppRoomIdRouteWithChildren
   '/app/create-room/': typeof AppCreateRoomIndexRoute
   '/app/edit-profile/': typeof AppEditProfileIndexRoute
   '/app/join-room/': typeof AppJoinRoomIndexRoute
@@ -333,18 +386,19 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | ''
+    | '/app'
     | '/auth'
     | '/tutorial'
     | '/auth/login'
     | '/auth/signup'
     | '/'
-    | '/app'
-    | '/app/ads-example'
+    | '/app/'
+    | '/app/room/$id'
     | '/app/create-room'
     | '/app/edit-profile'
     | '/app/join-room'
     | '/app/profile'
-    | '/app/room/$id'
+    | '/app/room/$id/'
     | '/app/room/$id/chat'
     | '/app/room/$id/game'
     | '/app/room/$id/results'
@@ -356,7 +410,6 @@ export interface FileRouteTypes {
     | '/auth/signup'
     | '/'
     | '/app'
-    | '/app/ads-example'
     | '/app/create-room'
     | '/app/edit-profile'
     | '/app/join-room'
@@ -368,13 +421,14 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_root-layout'
+    | '/app'
     | '/auth'
     | '/_root-layout/tutorial'
     | '/auth/login'
     | '/auth/signup'
     | '/_root-layout/'
     | '/app/'
-    | '/app/ads-example/'
+    | '/app/room/$id'
     | '/app/create-room/'
     | '/app/edit-profile/'
     | '/app/join-room/'
@@ -388,32 +442,14 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   RootLayoutRoute: typeof RootLayoutRouteWithChildren
+  AppRoute: typeof AppRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
-  AppIndexRoute: typeof AppIndexRoute
-  AppAdsExampleIndexRoute: typeof AppAdsExampleIndexRoute
-  AppCreateRoomIndexRoute: typeof AppCreateRoomIndexRoute
-  AppEditProfileIndexRoute: typeof AppEditProfileIndexRoute
-  AppJoinRoomIndexRoute: typeof AppJoinRoomIndexRoute
-  AppProfileIndexRoute: typeof AppProfileIndexRoute
-  AppRoomIdIndexRoute: typeof AppRoomIdIndexRoute
-  AppRoomIdChatIndexRoute: typeof AppRoomIdChatIndexRoute
-  AppRoomIdGameIndexRoute: typeof AppRoomIdGameIndexRoute
-  AppRoomIdResultsIndexRoute: typeof AppRoomIdResultsIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   RootLayoutRoute: RootLayoutRouteWithChildren,
+  AppRoute: AppRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
-  AppIndexRoute: AppIndexRoute,
-  AppAdsExampleIndexRoute: AppAdsExampleIndexRoute,
-  AppCreateRoomIndexRoute: AppCreateRoomIndexRoute,
-  AppEditProfileIndexRoute: AppEditProfileIndexRoute,
-  AppJoinRoomIndexRoute: AppJoinRoomIndexRoute,
-  AppProfileIndexRoute: AppProfileIndexRoute,
-  AppRoomIdIndexRoute: AppRoomIdIndexRoute,
-  AppRoomIdChatIndexRoute: AppRoomIdChatIndexRoute,
-  AppRoomIdGameIndexRoute: AppRoomIdGameIndexRoute,
-  AppRoomIdResultsIndexRoute: AppRoomIdResultsIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -427,17 +463,8 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/_root-layout",
-        "/auth",
-        "/app/",
-        "/app/ads-example/",
-        "/app/create-room/",
-        "/app/edit-profile/",
-        "/app/join-room/",
-        "/app/profile/",
-        "/app/room/$id/",
-        "/app/room/$id/chat/",
-        "/app/room/$id/game/",
-        "/app/room/$id/results/"
+        "/app",
+        "/auth"
       ]
     },
     "/_root-layout": {
@@ -445,6 +472,17 @@ export const routeTree = rootRoute
       "children": [
         "/_root-layout/tutorial",
         "/_root-layout/"
+      ]
+    },
+    "/app": {
+      "filePath": "app.tsx",
+      "children": [
+        "/app/",
+        "/app/room/$id",
+        "/app/create-room/",
+        "/app/edit-profile/",
+        "/app/join-room/",
+        "/app/profile/"
       ]
     },
     "/auth": {
@@ -471,34 +509,50 @@ export const routeTree = rootRoute
       "parent": "/_root-layout"
     },
     "/app/": {
-      "filePath": "app/index.tsx"
+      "filePath": "app/index.tsx",
+      "parent": "/app"
     },
-    "/app/ads-example/": {
-      "filePath": "app/ads-example/index.tsx"
+    "/app/room/$id": {
+      "filePath": "app/room/$id.tsx",
+      "parent": "/app",
+      "children": [
+        "/app/room/$id/",
+        "/app/room/$id/chat/",
+        "/app/room/$id/game/",
+        "/app/room/$id/results/"
+      ]
     },
     "/app/create-room/": {
-      "filePath": "app/create-room/index.tsx"
+      "filePath": "app/create-room/index.tsx",
+      "parent": "/app"
     },
     "/app/edit-profile/": {
-      "filePath": "app/edit-profile/index.tsx"
+      "filePath": "app/edit-profile/index.tsx",
+      "parent": "/app"
     },
     "/app/join-room/": {
-      "filePath": "app/join-room/index.tsx"
+      "filePath": "app/join-room/index.tsx",
+      "parent": "/app"
     },
     "/app/profile/": {
-      "filePath": "app/profile/index.tsx"
+      "filePath": "app/profile/index.tsx",
+      "parent": "/app"
     },
     "/app/room/$id/": {
-      "filePath": "app/room/$id/index.tsx"
+      "filePath": "app/room/$id/index.tsx",
+      "parent": "/app/room/$id"
     },
     "/app/room/$id/chat/": {
-      "filePath": "app/room/$id/chat/index.tsx"
+      "filePath": "app/room/$id/chat/index.tsx",
+      "parent": "/app/room/$id"
     },
     "/app/room/$id/game/": {
-      "filePath": "app/room/$id/game/index.tsx"
+      "filePath": "app/room/$id/game/index.tsx",
+      "parent": "/app/room/$id"
     },
     "/app/room/$id/results/": {
-      "filePath": "app/room/$id/results/index.tsx"
+      "filePath": "app/room/$id/results/index.tsx",
+      "parent": "/app/room/$id"
     }
   }
 }

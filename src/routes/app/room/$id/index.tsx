@@ -1,5 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { DecorativeBackground } from './-components/decorative-background'
 import { Header } from './-components/header'
@@ -7,19 +7,29 @@ import { GameCodeDisplay } from './-components/game-code-display'
 import { PlayerList } from './-components/player-list'
 import { RoleSelection } from './-components/role-selection'
 import { GameSettings } from './-components/game-settings'
-import { mockPlayers } from './-components/mock-data'
 import { containerVariants } from './-components/animations'
+import { useRoom, useRoomUser } from '../-utils'
+import type { RoleKey } from './-components/role-details'
+import { useMutation } from 'convex/react'
+import { api } from '@convex/_generated/api'
 
 export const Route = createFileRoute('/app/room/$id/')({
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const [isLeader] = useState(true) // This would come from the game state
-  const [selectedRole, setSelectedRole] = useState<string>('') // This would come from the game state
-
+  const room = useRoom()
+  const user = useRoomUser()
+  const isLeader = useMemo(() => room.ownerId === user.userId, [room.ownerId])
+  const [selectedRole, setSelectedRole] = useState<RoleKey>(
+    user.role as RoleKey,
+  )
+  const updateRole = useMutation(api.rooms.updateUserRole)
+  const leaveRoom = useMutation(api.rooms.leaveRoom)
+  const navigate = useNavigate()
   const handleLeaveRoom = () => {
-    // Navigate back to the join room page
+    leaveRoom({ userId: user.userId, roomId: room._id })
+    navigate({ to: '/app/join-room' })
   }
 
   return (
@@ -52,13 +62,15 @@ function RouteComponent() {
           className="grid grid-cols-1 lg:grid-cols-3 gap-6"
         >
           {/* Players List */}
-          <PlayerList players={mockPlayers} />
+          <PlayerList />
 
           {/* Role Selection */}
-          <RoleSelection 
-            players={mockPlayers} 
-            selectedRole={selectedRole} 
-            setSelectedRole={(role) => setSelectedRole(role)} 
+          <RoleSelection
+            selectedRole={selectedRole}
+            setSelectedRole={async (role) => {
+              setSelectedRole(role)
+              await updateRole({ userId: user.userId, role, roomId: room._id })
+            }}
           />
 
           {/* Game Settings (Leader Only) */}

@@ -2,8 +2,10 @@ import { Copy } from "lucide-react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { itemVariants } from "./animations"
+import { useRoom } from "../../-utils"
 
 export function GameCodeDisplay() {
+  const room = useRoom()
   return (
     <motion.div 
       variants={itemVariants}
@@ -21,7 +23,7 @@ export function GameCodeDisplay() {
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
           >
             <span className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              ABC123
+              {room.code}
             </span>
           </motion.div>
           <h2 className="text-sm sm:text-lg font-semibold text-primary">Game Code</h2>
@@ -34,7 +36,7 @@ export function GameCodeDisplay() {
             variant="outline"
             className="bg-primary/10 border-primary text-primary hover:bg-primary/20 h-8 sm:h-auto py-1 sm:py-2 px-2 sm:px-3 text-xs sm:text-sm"
             onClick={() => {
-              /* TODO: Copy code */
+              navigator.clipboard.writeText(room.code)
             }}
           >
             <Copy className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />

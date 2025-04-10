@@ -12,12 +12,10 @@ import { Switch as ShadcnSwitch } from '@/components/ui/switch'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 
-interface SubscribeButtonProps extends React.ComponentPropsWithoutRef<typeof Button> {
-  label: string
-}
+interface SubscribeButtonProps extends React.ComponentPropsWithoutRef<typeof Button> {}
 
 export const SubscribeButton = React.forwardRef<HTMLButtonElement, SubscribeButtonProps>(
-  ({ label, className, ...props }, ref) => {
+  ({ className, children, ...props }, ref) => {
     const form = useFormContext()
     return (
       <form.Subscribe selector={(state) => state.isSubmitting}>
@@ -29,7 +27,7 @@ export const SubscribeButton = React.forwardRef<HTMLButtonElement, SubscribeButt
             disabled={isSubmitting}
             {...props}
           >
-            {label}
+            {children}
           </Button>
         )}
       </form.Subscribe>

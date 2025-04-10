@@ -7,8 +7,10 @@ import { RoomCodeInput } from './-components/room-code-input'
 import { Separator } from './-components/separator'
 import { SearchBar } from './-components/search-bar'
 import { RoomList } from './-components/room-list'
-import { mockRooms } from './-components/room-data'
 import { containerVariants } from './-components/animations'
+import { useQuery } from '@tanstack/react-query'
+import { convexQuery } from '@convex-dev/react-query'
+import { api } from '@convex/_generated/api'
 
 export const Route = createFileRoute('/app/join-room/')({
   component: JoinRoomPage,
@@ -18,9 +20,10 @@ function JoinRoomPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [roomIdInput, setRoomIdInput] = useState('')
 
-  const filteredRooms = mockRooms.filter((room) =>
-    room.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+  const { data: filteredRooms } = useQuery({
+    ...convexQuery(api.rooms.searchRoom, { roomName: searchTerm }),
+    initialData: []
+  })
 
   return (
     <motion.div

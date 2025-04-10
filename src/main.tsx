@@ -9,12 +9,15 @@ import { routeTree } from './routeTree.gen'
 
 import './styles.css'
 import reportWebVitals from './reportWebVitals.ts'
+import AuthProvider, { useAuth } from './components/auth-provider.tsx'
+import AppConvexProvider from './integrations/convex/provider.tsx'
 
 // Create a new router instance
 const router = createRouter({
   routeTree,
   context: {
     ...TanstackQuery.getContext(),
+    auth: undefined!,
   },
   defaultPreload: 'intent',
   scrollRestoration: true,
@@ -29,16 +32,28 @@ declare module '@tanstack/react-router' {
   }
 }
 
+function App() {
+  const auth = useAuth()
+
+  return (
+    <TanstackQuery.Provider>
+      <RouterProvider router={router} context={{ auth }} />
+    </TanstackQuery.Provider>
+  )
+}
+
 // Render the app
 const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
-    <StrictMode>
-      <TanstackQuery.Provider>
-        <RouterProvider router={router} />
-      </TanstackQuery.Provider>
-    </StrictMode>,
+    // <StrictMode>
+      <AppConvexProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </AppConvexProvider>
+    // </StrictMode>,
   )
 }
 

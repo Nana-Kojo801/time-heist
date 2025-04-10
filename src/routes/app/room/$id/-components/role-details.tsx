@@ -6,7 +6,7 @@ export interface RoleDetail {
   description: string
 }
 
-export type RoleKey = 'Leader' | 'Lookout' | 'Technician' | 'Safecracker' | 'Disruptor'
+export type RoleKey = 'Leader' | 'Lookout' | 'Technician' | 'Safecracker'
 
 // Role descriptions and icons
 export const roleDetails: Record<RoleKey, RoleDetail> = {
@@ -25,9 +25,5 @@ export const roleDetails: Record<RoleKey, RoleDetail> = {
   'Safecracker': {
     icon: <Zap className="h-5 w-5 text-primary" />,
     description: 'Gets bonus points for hitting the exact time window'
-  },
-  'Disruptor': {
-    icon: <Clock className="h-5 w-5 text-primary" />,
-    description: 'Can accelerate or randomize timers to score bonus points'
   }
 } 

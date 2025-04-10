@@ -4,28 +4,21 @@ import { Button } from '@/components/ui/button'
 import { Clock, Target, Trophy, Edit } from 'lucide-react'
 
 import { UserAvatar } from './user-avatar'
-import { PointsDisplay } from './points-display'
 import { StatCard } from './stat-card'
+import { useAuthUser } from '@/components/auth-provider'
 
 type ProfileHeaderProps = {
-  username: string;
-  avatar: string;
-  level: number;
-  points: number;
-  gamesPlayed: number;
-  accuracy: number;
-  wins: number;
+  username: string
+  avatar: string
+  gamesPlayed: number
+  wins: number
 }
 
 export const ProfileHeader = ({
-  username,
-  avatar,
-  level,
-  points,
   gamesPlayed,
-  accuracy,
-  wins
+  wins,
 }: ProfileHeaderProps) => {
+  const user = useAuthUser()
   return (
     <motion.div
       initial={{ y: -20, opacity: 0 }}
@@ -34,7 +27,7 @@ export const ProfileHeader = ({
       className="flex flex-col items-center justify-center p-6 text-center relative mb-6"
     >
       {/* Avatar with animated border */}
-      <UserAvatar avatar={avatar} level={level} />
+      <UserAvatar avatar={user.avatar} />
 
       {/* Username with gradient text */}
       <motion.h1
@@ -43,7 +36,7 @@ export const ProfileHeader = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        {username}
+        {user.username}
       </motion.h1>
 
       {/* Edit Profile Button */}
@@ -66,32 +59,29 @@ export const ProfileHeader = ({
         </Link>
       </motion.div>
 
-      {/* Points display with animated glow */}
-      <PointsDisplay points={points} />
-
       {/* Stats cards */}
       <div className="grid grid-cols-3 gap-4 w-full">
-        <StatCard 
+        <StatCard
           icon={<Clock className="w-5 h-5" />}
           label="Games"
           value={gamesPlayed}
           delay={0.2}
         />
-        
-        <StatCard 
-          icon={<Target className="w-5 h-5" />}
-          label="Accuracy"
-          value={`${accuracy}%`}
-          delay={0.3}
-        />
-        
-        <StatCard 
+
+        <StatCard
           icon={<Trophy className="w-5 h-5" />}
           label="Wins"
           value={wins}
           delay={0.4}
         />
+
+        <StatCard
+          icon={<Target className="w-5 h-5" />}
+          label="Losses"
+          value={gamesPlayed - wins}
+          delay={0.6}
+        />
       </div>
     </motion.div>
   )
-} 
+}

@@ -1,11 +1,10 @@
 import { motion } from 'framer-motion'
 
 type UserAvatarProps = {
-  avatar: string;
-  level: number;
+  avatar: string
 }
 
-export const UserAvatar = ({ avatar, level }: UserAvatarProps) => {
+export const UserAvatar = ({ avatar }: UserAvatarProps) => {
   return (
     <div className="relative mb-3">
       <div className="absolute -inset-6 bg-primary/5 rounded-full blur-xl" />
@@ -24,16 +23,11 @@ export const UserAvatar = ({ avatar, level }: UserAvatarProps) => {
         }}
         className="w-28 h-28 rounded-full bg-gradient-to-r from-primary to-secondary p-[3px] mb-2 relative z-10"
       >
-        <div className="w-full h-full rounded-full bg-card/80 backdrop-blur-sm flex items-center justify-center text-5xl border border-primary/10">
-          {avatar}
-        </div>
-      </motion.div>
-      <motion.div
-        whileHover={{ scale: 1.05 }}
-        className="absolute -top-2 -right-2 bg-gradient-to-r from-primary to-secondary text-primary-foreground font-bold text-xs px-3 py-1 rounded-full shadow-lg border border-primary/20 backdrop-blur-sm"
-      >
-        Lvl {level}
+        <img
+          src={avatar}
+          className="w-full h-full object-cover object-center rounded-full bg-card/80 backdrop-blur-sm flex items-center justify-center text-5xl border border-primary/10"
+        />
       </motion.div>
     </div>
   )
-} 
+}
