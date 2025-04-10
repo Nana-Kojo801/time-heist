@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
 import { isActiveUser, useRoom } from '../../../-utils'
-import UserAvtar from '@/components/user-avatar'
 import UserAvatar from '@/components/user-avatar'
 
 const OnlinePlayers = () => {

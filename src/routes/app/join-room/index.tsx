@@ -18,7 +18,6 @@ export const Route = createFileRoute('/app/join-room/')({
 
 function JoinRoomPage() {
   const [searchTerm, setSearchTerm] = useState('')
-  const [roomIdInput, setRoomIdInput] = useState('')
 
   const { data: filteredRooms } = useQuery({
     ...convexQuery(api.rooms.searchRoom, { roomName: searchTerm }),
@@ -43,7 +42,7 @@ function JoinRoomPage() {
         className="mx-auto max-w-lg relative z-10"
       >
         {/* Join by Room ID */}
-        <RoomCodeInput roomIdInput={roomIdInput} setRoomIdInput={setRoomIdInput} />
+        <RoomCodeInput />
 
         {/* Separator */}
         <Separator />

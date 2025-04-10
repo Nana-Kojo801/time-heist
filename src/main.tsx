@@ -47,13 +47,13 @@ const rootElement = document.getElementById('app')
 if (rootElement && !rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
   root.render(
-    // <StrictMode>
+    <StrictMode>
       <AppConvexProvider>
         <AuthProvider>
           <App />
         </AuthProvider>
       </AppConvexProvider>
-    // </StrictMode>,
+    </StrictMode>,
   )
 }
 

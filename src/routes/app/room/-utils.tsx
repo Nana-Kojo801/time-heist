@@ -1,7 +1,7 @@
 import { useAuthUser } from '@/components/auth-provider'
 import { convexQuery, useConvex } from '@convex-dev/react-query'
 import { api } from '@convex/_generated/api'
-import type { DataModel, Id } from '@convex/_generated/dataModel'
+import type { Id } from '@convex/_generated/dataModel'
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
 import { useParams } from '@tanstack/react-router'
 import { useMutation } from 'convex/react'

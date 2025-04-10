@@ -1,4 +1,4 @@
-import { Shield, Eye, Wrench, Zap, Clock } from 'lucide-react'
+import { Shield, Eye, Wrench, Zap } from 'lucide-react'
 import { type ReactNode } from 'react'
 
 export interface RoleDetail {

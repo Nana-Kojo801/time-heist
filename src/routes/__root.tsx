@@ -1,14 +1,12 @@
 import {
   Outlet,
-  createRootRouteWithContext,
-  useNavigate,
+  createRootRouteWithContext
 } from '@tanstack/react-router'
 
 import ConvexProvider from '../integrations/convex/provider'
 
 import type { QueryClient } from '@tanstack/react-query'
-import { useAuth, type IAuthContext } from '@/components/auth-provider'
-import { Loader } from 'lucide-react'
+import { type IAuthContext } from '@/components/auth-provider'
 import { Toaster } from 'sonner'
 
 interface MyRouterContext {

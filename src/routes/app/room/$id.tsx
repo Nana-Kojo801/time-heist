@@ -4,10 +4,8 @@ import {
   activeUsersQueryOptions,
   chatQueryOptions,
   initPresence,
-  isActiveUser,
   roomQueryOptions,
-  useActiveUsers,
-  useRoomUser,
+  useActiveUsers
 } from './-utils'
 import { LoaderPinwheelIcon } from 'lucide-react'
 import { useEffect, useRef } from 'react'
