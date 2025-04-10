@@ -11,7 +11,7 @@ import { api } from '@convex/_generated/api'
 export const StatsSection = () => {
   const user = useAuthUser()
   const { data: gameHistory, isLoading } = useQuery({
-    ...convexQuery(api.games.get, { userId: user._id }),
+    ...convexQuery(api.gamesHistory.get, { userId: user._id }),
     initialData: [],
   })
 

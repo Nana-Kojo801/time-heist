@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion'
-import type { Role } from './types'
 
 type RoleStatsProps = {
-  gameHistory: DataModel['games']['document'][]
+  gameHistory: DataModel['gamesHistory']['document'][]
 }
 
 import { Skeleton } from '@/components/ui/skeleton'

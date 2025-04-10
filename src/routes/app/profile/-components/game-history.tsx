@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import type { DataModel } from '@convex/_generated/dataModel'
 
 type GameHistoryProps = {
-  gameHistory: DataModel["games"]["document"][];
+  gameHistory: DataModel["gamesHistory"]["document"][];
 }
 
 export function GamesSkeleton({ count = 3 }: { count?: number }) {
