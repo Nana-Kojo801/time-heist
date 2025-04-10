@@ -68,7 +68,7 @@ export const initPresence = () => {
         roomId: roomId as Id<"rooms">,
         userId: user.userId,
       })
-    }, 15000)
+    }, 5000)
     return () => clearInterval(interval)
   }, [])
 }
