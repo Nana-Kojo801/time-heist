@@ -3,13 +3,14 @@ import { createFileRoute } from '@tanstack/react-router'
 import {
   activeUsersQueryOptions,
   chatQueryOptions,
+  handleReconnection,
   initPresence,
-  roomQueryOptions,
-  useActiveUsers
+  manageNotifications,
+  monitorUsersStatus,
+  roomNotificationsQueryOptions,
+  roomQueryOptions
 } from './-utils'
 import { LoaderPinwheelIcon } from 'lucide-react'
-import { useEffect, useRef } from 'react'
-import { toast } from 'sonner'
 
 export const Route = createFileRoute('/app/room/$id')({
   loader: async ({ context: { queryClient }, params: { id } }) => {
@@ -17,6 +18,7 @@ export const Route = createFileRoute('/app/room/$id')({
       queryClient.ensureQueryData(roomQueryOptions(id)),
       queryClient.ensureQueryData(chatQueryOptions(id)),
       queryClient.ensureQueryData(activeUsersQueryOptions(id)),
+      queryClient.ensureQueryData(roomNotificationsQueryOptions(id)),
     ])
   },
   pendingComponent: () => {
@@ -31,26 +33,9 @@ export const Route = createFileRoute('/app/room/$id')({
 
 function RouteComponent() {
   initPresence()
-  const activeUsers = useActiveUsers()
-  const previousUsers = useRef<typeof activeUsers>(undefined)
-
-  useEffect(() => {
-    if (!activeUsers || !previousUsers.current) {
-      previousUsers.current = activeUsers
-      return
-    }
-
-    // Proper disconnect detection
-    const disconnectedUsers = previousUsers.current.filter(
-      (p1) => !activeUsers.some((p2) => p2.userId === p1.userId),
-    )
-
-    disconnectedUsers.forEach((user) => {
-      toast.error(`${user.username} has disconnected`)
-    })
-
-    previousUsers.current = activeUsers
-  }, [activeUsers])
+  manageNotifications()
+  monitorUsersStatus()
+  handleReconnection()
 
   return <Outlet />
 }

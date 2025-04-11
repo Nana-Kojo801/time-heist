@@ -39,6 +39,12 @@ export default defineSchema({
     .searchIndex('search_code', {
       searchField: 'code',
     }),
+  roomNotifications: defineTable({
+    roomId: v.id('rooms'),
+    userId: v.id("users"),
+    type: v.union(v.literal("reconnected"), v.literal("disconnected"), v.literal("leave")),
+    message: v.string(),
+  }),
   games: defineTable({
     roomId: v.id('rooms'),
     timer: v.string(),

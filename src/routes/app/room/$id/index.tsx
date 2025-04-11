@@ -27,6 +27,7 @@ function RouteComponent() {
   const updateRole = useMutation(api.rooms.updateUserRole)
   const leaveRoom = useMutation(api.rooms.leaveRoom)
   const navigate = useNavigate()
+  
   const handleLeaveRoom = () => {
     leaveRoom({ userId: user.userId, roomId: room._id })
     navigate({ to: '/app/join-room' })
