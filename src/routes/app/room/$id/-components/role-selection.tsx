@@ -1,7 +1,6 @@
 import { Shield } from "lucide-react"
 import { motion } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { containerVariants, itemVariants } from "./animations"
 import { roleDetails, type RoleKey } from "./role-details"
 import { useRoom } from "../../-utils"
@@ -26,7 +25,7 @@ export function RoleSelection({ selectedRole, setSelectedRole }: RoleSelectionPr
         <Shield className="h-5 w-5 text-primary" />
         <h2 className="text-xl font-bold text-primary">Select Role</h2>
       </div>
-      <motion.div 
+      <motion.div
         className="grid grid-cols-1 gap-4"
         variants={containerVariants}
       >
@@ -79,21 +78,6 @@ export function RoleSelection({ selectedRole, setSelectedRole }: RoleSelectionPr
             </motion.div>
           );
         })}
-      </motion.div>
-      <motion.div 
-        className="mt-6"
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-      >
-        <Button
-          className="w-full py-6 text-lg font-bold bg-gradient-to-r from-primary to-secondary text-primary-foreground"
-          onClick={() => {
-            /* TODO: Toggle ready status */
-          }}
-          disabled={!selectedRole}
-        >
-          Ready Up
-        </Button>
       </motion.div>
     </motion.div>
   )

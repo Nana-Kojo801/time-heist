@@ -3,12 +3,11 @@ import { createFileRoute } from '@tanstack/react-router'
 import {
   activeUsersQueryOptions,
   chatQueryOptions,
-  handleReconnection,
   initPresence,
-  manageNotifications,
-  monitorUsersStatus,
-  roomNotificationsQueryOptions,
-  roomQueryOptions
+  monitorUsers,
+  roomQueryOptions,
+  gamesQueryOptions,
+  gameQueryOptions
 } from './-utils'
 import { LoaderPinwheelIcon } from 'lucide-react'
 
@@ -18,7 +17,8 @@ export const Route = createFileRoute('/app/room/$id')({
       queryClient.ensureQueryData(roomQueryOptions(id)),
       queryClient.ensureQueryData(chatQueryOptions(id)),
       queryClient.ensureQueryData(activeUsersQueryOptions(id)),
-      queryClient.ensureQueryData(roomNotificationsQueryOptions(id)),
+      queryClient.ensureQueryData(gamesQueryOptions(id)),
+      queryClient.ensureQueryData(gameQueryOptions(id)),
     ])
   },
   pendingComponent: () => {
@@ -33,9 +33,7 @@ export const Route = createFileRoute('/app/room/$id')({
 
 function RouteComponent() {
   initPresence()
-  manageNotifications()
-  monitorUsersStatus()
-  handleReconnection()
+  monitorUsers()
 
   return <Outlet />
 }

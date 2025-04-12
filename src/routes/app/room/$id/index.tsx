@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { DecorativeBackground } from './-components/decorative-background'
 import { Header } from './-components/header'
@@ -25,13 +25,13 @@ function RouteComponent() {
     user.role as RoleKey,
   )
   const updateRole = useMutation(api.rooms.updateUserRole)
-  const leaveRoom = useMutation(api.rooms.leaveRoom)
   const navigate = useNavigate()
-  
-  const handleLeaveRoom = () => {
-    leaveRoom({ userId: user.userId, roomId: room._id })
-    navigate({ to: '/app/join-room' })
-  }
+
+  useEffect(() => {
+    if (room.state === 'playing') {
+      navigate({ to: '/app/room/$id/game', params: { id: room._id } })
+    }
+  }, [room.state])
 
   return (
     <motion.div
@@ -43,7 +43,7 @@ function RouteComponent() {
       <DecorativeBackground />
 
       <div className="container mx-auto px-4 py-8 max-w-7xl relative z-10">
-        <Header isLeader={isLeader} handleLeaveRoom={handleLeaveRoom} />
+        <Header isLeader={isLeader} />
 
         {/* Game Code Display */}
         <motion.div
@@ -75,7 +75,7 @@ function RouteComponent() {
           />
 
           {/* Game Settings (Leader Only) */}
-          {isLeader && <GameSettings />}
+          <GameSettings isLeader={isLeader} />
         </motion.div>
       </div>
     </motion.div>

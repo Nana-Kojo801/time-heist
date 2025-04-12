@@ -1,16 +1,28 @@
-import { Link, useParams } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
-import { LogOut, MessageSquare, Play } from 'lucide-react'
+import { Loader, LogOut, MessageSquare, Play } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { containerVariants, itemVariants } from './animations'
+import { useRoom, useRoomUser } from '../../-utils'
+import { useMutation as useReactQueryMutation } from '@tanstack/react-query'
+import { useConvexMutation } from '@convex-dev/react-query'
+import { api } from '@convex/_generated/api'
+import { useMutation } from 'convex/react'
 
 interface HeaderProps {
   isLeader: boolean
-  handleLeaveRoom: () => void
 }
 
-export function Header({ isLeader, handleLeaveRoom }: HeaderProps) {
-  const { id } = useParams({ from: '/app/room/$id' })
+export function Header({ isLeader }: HeaderProps) {
+  const room = useRoom()
+  const user = useRoomUser()
+  const leaveRoom = useMutation(api.rooms.leaveRoom)
+  const { mutateAsync: createGame, isPending: creatingGame } =
+    useReactQueryMutation({
+      mutationFn: useConvexMutation(api.games.create),
+    })
+  const navigate = useNavigate()
+
   return (
     <motion.div
       variants={containerVariants}
@@ -40,7 +52,7 @@ export function Header({ isLeader, handleLeaveRoom }: HeaderProps) {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <Link to="/app/room/$id/chat" params={{ id }}>
+          <Link to="/app/room/$id/chat" params={{ id: room._id }}>
             <Button variant="outline" className="group">
               <MessageSquare className="w-4 h-4 mr-2 text-primary group-hover:text-primary-foreground" />
               Chat
@@ -53,15 +65,21 @@ export function Header({ isLeader, handleLeaveRoom }: HeaderProps) {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <Link to="/app/room/$id/game" params={{ id: '123' }}>
-              <Button
-                variant="tertiary"
-                className="bg-gradient-to-r from-primary to-secondary text-primary-foreground group"
-              >
+            <Button
+              disabled={room.members.length < 4 || creatingGame}
+              variant="tertiary"
+              className="bg-gradient-to-r from-primary to-secondary text-primary-foreground group"
+              onClick={async () => {
+                await createGame({ roomId: room._id })
+              }}
+            >
+              {creatingGame ? (
+                <Loader className="animate-spin" />
+              ) : (
                 <Play className="w-4 h-4 mr-2 group-hover:text-primary-foreground" />
-                Start Game
-              </Button>
-            </Link>
+              )}
+              Start Game
+            </Button>
           </motion.div>
         )}
         <motion.div
@@ -71,7 +89,10 @@ export function Header({ isLeader, handleLeaveRoom }: HeaderProps) {
         >
           <Button
             variant="destructive"
-            onClick={handleLeaveRoom}
+            onClick={async () => {
+              navigate({ to: '/app/join-room' })
+              leaveRoom({ userId: user.userId, roomId: room._id })
+            }}
             className="flex items-center bg-rose-500/80 hover:bg-rose-500 text-white"
           >
             <LogOut className="w-4 h-4 mr-2" /> Leave

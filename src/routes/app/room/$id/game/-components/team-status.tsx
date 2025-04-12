@@ -2,13 +2,15 @@ import { motion } from "framer-motion"
 import { Users } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { itemVariants, containerVariants } from "./animations"
-import type { GamePlayer } from "./types"
+import { useActiveUsers } from "../../../-utils"
+import UserAvtar from "@/components/user-avatar"
+import { useGame } from "./hooks"
 
-interface TeamStatusProps {
-  players: GamePlayer[]
-}
 
-export function TeamStatus({ players }: TeamStatusProps) {
+export function TeamStatus() {
+  const game = useGame()
+  const activeUsers = useActiveUsers()
+  const isActiveUser = (userId: string) => activeUsers.some(user => user.userId === userId)
   return (
     <motion.div 
       className="bg-card/50 backdrop-blur-sm rounded-lg border border-primary/20 p-4 sm:p-5 flex-1 overflow-y-auto"
@@ -29,37 +31,26 @@ export function TeamStatus({ players }: TeamStatusProps) {
         initial="hidden"
         animate="visible"
       >
-        {players.map((player) => (
+        {game.players.map((player) => (
           <motion.div
-            key={player.id}
-            className={`p-3 rounded-lg hover:bg-card/50 transition-colors duration-200 border ${
-              player.name === 'Player1'
-                ? 'border-primary/20 bg-primary/5'
-                : 'border-primary/10 bg-card/30'
-            } flex items-center gap-3`}
+            key={player.userId}
+            className={`p-3 rounded-lg hover:bg-card/50 transition-colors duration-200 border border-primary/20 bg-primary/5 flex items-center gap-3`}
             variants={itemVariants}
             whileHover={{ x: 5, backgroundColor: "rgba(10, 255, 255, 0.15)" }}
           >
-            <motion.div 
-              className="w-10 h-10 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center border border-primary/30"
-              whileHover={{ rotate: 15 }}
-            >
-              <span className="text-sm font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                {player.name[0]}
-              </span>
-            </motion.div>
+            <UserAvtar username={player.username} className="w-10 h-10" src={player.avatar} />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <p className="text-sm font-medium truncate">
-                  {player.name}
+                  {player.username}
                 </p>
                 <motion.div
-                  className={`w-2 h-2 rounded-full ${player.isOnline ? 'bg-green-500' : 'bg-muted-foreground'}`}
-                  animate={player.isOnline ? {
+                  className={`w-2 h-2 rounded-full ${isActiveUser(player.userId) ? 'bg-green-500' : 'bg-muted-foreground'}`}
+                  animate={isActiveUser(player.userId) ? {
                     scale: [1, 1.5, 1],
                     opacity: [0.7, 1, 0.7],
                   } : {}}
-                  transition={player.isOnline ? {
+                  transition={isActiveUser(player.userId) ? {
                     duration: 2,
                     repeat: Infinity,
                     ease: "easeInOut"
@@ -70,16 +61,13 @@ export function TeamStatus({ players }: TeamStatusProps) {
                 <Badge variant="outline" className="text-xs px-1.5 py-0 h-4 bg-secondary/10 text-secondary border-secondary/20">
                   {player.role}
                 </Badge>
-                <span className="text-xs text-muted-foreground">
-                  {player.status}
-                </span>
               </div>
             </div>
             <motion.div 
               className="text-sm font-medium bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent"
               whileHover={{ scale: 1.2 }}
             >
-              {player.points}
+              {player.score}
             </motion.div>
           </motion.div>
         ))}

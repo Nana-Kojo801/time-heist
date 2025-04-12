@@ -18,6 +18,7 @@ export const create = mutation({
     const roomId = await ctx.db.insert('rooms', {
       ...rest,
       code: roomCode,
+      state: 'idle',
       members: [
         {
           userId: rest.ownerId,
@@ -25,10 +26,14 @@ export const create = mutation({
           role: 'Leader',
           username,
           avatar,
-          status: 'active',
           lastActive: Date.now(),
         },
       ],
+      gameSettings: {
+        minutes: 2,
+        seconds: 0,
+        milliseconds: 0,
+      },
     })
     return { roomCode, roomId }
   },
@@ -54,9 +59,8 @@ export const getActiveUsers = query({
   },
 })
 
-export const updateStatus = mutation({
+export const updateLastActive = mutation({
   args: {
-    status: v.union(v.literal('active'), v.literal('inactive')),
     roomId: v.id('rooms'),
     userId: v.id('users'),
   },
@@ -72,91 +76,15 @@ export const updateStatus = mutation({
   },
 })
 
-export const monitorUsersStatus = mutation({
-  args: { roomId: v.id('rooms') },
-  handler: async (ctx, { roomId }) => {
-    const room = (await ctx.db.get(roomId))!
-    const activeThreshold = Date.now() - 20000
-    const notifications = await ctx.db
-      .query('roomNotifications')
-      .filter((q) => q.eq(q.field('roomId'), roomId))
-      .collect()
-    const disconnectedNotifications = notifications.filter(
-      (notification) => notification.type === 'disconnected',
-    )
-
-    room.members.forEach(async (member) => {
-      if (
-        member.lastActive < activeThreshold &&
-        !disconnectedNotifications.some(
-          (notification) => notification.userId === member.userId,
-        )
-      ) {
-        await Promise.all([
-          ctx.db.patch(roomId, {
-            members: room.members.map((m) =>
-              m.userId === member.userId
-                ? { ...m, status: 'inactive' as 'inactive' | 'active' }
-                : m,
-            ),
-          }),
-          ctx.runMutation(api.roomNotifications.insert, {
-            roomId,
-            userId: member.userId,
-            message: `${member.username} has disconnected`,
-            type: 'disconnected',
-          }),
-        ])
-      }
-    })
+export const updateGameSettings = mutation({
+  args: {
+    minutes: v.number(),
+    seconds: v.number(),
+    milliseconds: v.number(),
+    roomId: v.id('rooms'),
   },
-})
-
-export const handleReconnect = mutation({
-  args: { roomId: v.id('rooms'), userId: v.id('users') },
-  handler: async (ctx, { roomId, userId }) => {
-    const [notifications, room] = await Promise.all([
-      ctx.db
-        .query('roomNotifications')
-        .filter((q) => q.eq(q.field('roomId'), roomId))
-        .collect(),
-      ctx.db.get(roomId),
-    ])
-
-    const user = room!.members.find((member) => member.userId === userId)!
-
-    const deleteOperations = notifications
-      .filter(
-        (notification) =>
-          notification.type === 'disconnected' &&
-          notification.userId === userId,
-      )
-      .map((notification) => ctx.db.delete(notification._id))
-
-    await Promise.all(deleteOperations)
-
-    // 3. Single atomic update for member status
-    const updatedMembers = room!.members.map((m) =>
-      m.userId === userId
-        ? {
-            ...m,
-            status: 'active' as const,
-            lastActive: Date.now(),
-          }
-        : m,
-    )
-    if (user.status === 'inactive') {
-      await ctx.db.insert('roomNotifications', {
-        roomId,
-        userId: user.userId,
-        message: `${user.username} has reconnected`,
-        type: 'reconnected',
-      })
-    }
-
-    await ctx.db.patch(roomId, {
-      members: updatedMembers,
-    })
+  handler: async (ctx, { roomId, ...gameSettings }) => {
+    await ctx.db.patch(roomId, { gameSettings })
   },
 })
 
@@ -195,7 +123,6 @@ export const joinRoom = mutation({
           ready: false,
           role,
           avatar,
-          status: 'active',
           lastActive: Date.now(),
         },
       ],
@@ -225,18 +152,9 @@ export const leaveRoom = mutation({
   args: { roomId: v.id('rooms'), userId: v.id('users') },
   handler: async (ctx, { roomId, userId }) => {
     const room = (await ctx.db.get(roomId))!
-    const user = room.members.find((member) => member.userId === userId)!
-    await Promise.all([
-      ctx.db.insert('roomNotifications', {
-        message: `${user.username} has left`,
-        type: 'leave',
-        roomId,
-        userId,
-      }),
-      ctx.db.patch(roomId, {
-        members: room.members.filter((member) => member.userId !== userId),
-      }),
-    ])
+    await ctx.db.patch(roomId, {
+      members: room.members.filter((member) => member.userId !== userId),
+    })
   },
 })
 

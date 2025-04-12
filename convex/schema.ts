@@ -21,6 +21,7 @@ export default defineSchema({
     private: v.boolean(),
     password: v.optional(v.string()),
     ownerId: v.id('users'),
+    state: v.union(v.literal("idle"), v.literal("playing")),
     members: v.array(
       v.object({
         userId: v.id('users'),
@@ -28,10 +29,14 @@ export default defineSchema({
         avatar: v.string(),
         role: v.string(),
         ready: v.boolean(),
-        status: v.union(v.literal("active"), v.literal("inactive")),
         lastActive: v.number()
       }),
     ),
+    gameSettings: v.object({
+      minutes: v.number(),
+      seconds: v.number(),
+      milliseconds: v.number(),
+    })
   })
     .searchIndex('search_name', {
       searchField: 'name',
@@ -39,16 +44,10 @@ export default defineSchema({
     .searchIndex('search_code', {
       searchField: 'code',
     }),
-  roomNotifications: defineTable({
-    roomId: v.id('rooms'),
-    userId: v.id("users"),
-    type: v.union(v.literal("reconnected"), v.literal("disconnected"), v.literal("leave")),
-    message: v.string(),
-  }),
   games: defineTable({
     roomId: v.id('rooms'),
-    timer: v.string(),
-    startTime: v.string(),
+    startTime: v.number(),
+    state: v.union(v.literal("waiting"), v.literal("playing"), v.literal("finished")),
     timeWindows: v.array(v.string()),
     players: v.array(
       v.object({
@@ -63,11 +62,6 @@ export default defineSchema({
         ),
       }),
     ),
-  }),
-  presences: defineTable({
-    userId: v.id('users'),
-    roomId: v.id('rooms'),
-    updated: v.number(),
   }),
   roomChats: defineTable({
     roomId: v.id("rooms"),

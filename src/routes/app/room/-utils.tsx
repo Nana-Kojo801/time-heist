@@ -5,13 +5,19 @@ import type { Id } from '@convex/_generated/dataModel'
 import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
 import { useParams } from '@tanstack/react-router'
 import { useMutation } from 'convex/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 export const roomQueryOptions = (roomId: string) => {
   return queryOptions({
     ...convexQuery(api.rooms.get, { roomId: roomId as Id<'rooms'> }),
-    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+  })
+}
+
+export const gamesQueryOptions = (roomId: string) => {
+  return queryOptions({
+    ...convexQuery(api.games.getGames, { roomId: roomId as Id<'rooms'> }),
     gcTime: 5 * 60 * 1000,
   })
 }
@@ -23,19 +29,17 @@ export const chatQueryOptions = (roomId: string) => {
   })
 }
 
-export const activeUsersQueryOptions = (roomId: string) => {
+export const gameQueryOptions = (roomId: string) => {
   return queryOptions({
-    ...convexQuery(api.rooms.getActiveUsers, {
-      roomId: roomId as Id<'rooms'>,
-    }),
-    staleTime: 1000,
-    gcTime: 5 * 60 * 1000,
+    ...convexQuery(api.games.getGame, { roomId: roomId as Id<'rooms'> }),
+    gcTime: 1 * 60 * 1000,
   })
 }
 
-export const roomNotificationsQueryOptions = (roomId: string) => {
+
+export const activeUsersQueryOptions = (roomId: string) => {
   return queryOptions({
-    ...convexQuery(api.roomNotifications.get, {
+    ...convexQuery(api.rooms.getActiveUsers, {
       roomId: roomId as Id<'rooms'>,
     }),
     staleTime: 1000,
@@ -61,6 +65,12 @@ export const useActiveUsers = () => {
   return activeUsers
 }
 
+export const useRoomGames = () => {
+  const { id } = useParams({ from: '/app/room/$id' })
+  const { data: games } = useSuspenseQuery(gamesQueryOptions(id))
+  return games
+}
+
 export const isActiveUser = (userId: Id<'users'>) => {
   const activeUsers = useActiveUsers()
   return activeUsers.map((user) => user.userId).includes(userId)
@@ -69,7 +79,7 @@ export const isActiveUser = (userId: Id<'users'>) => {
 export const useConnectionStatus = () => {
   const convex = useConvex()
   const [connectionState, setConnectionState] = useState(true)
-  
+
   useEffect(() => {
     const interval = setInterval(() => {
       setConnectionState(convex.connectionState().isWebSocketConnected)
@@ -83,13 +93,11 @@ export const useConnectionStatus = () => {
 export const initPresence = () => {
   const { id: roomId } = useParams({ from: '/app/room/$id' })
   const user = useRoomUser()
-  const updateStatus = useMutation(api.rooms.updateStatus)
-  const online = useConnectionStatus()
-  
+  const updateLastActive = useMutation(api.rooms.updateLastActive)
+
   useEffect(() => {
     const interval = setInterval(() => {
-      updateStatus({
-        status: online ? 'active' : 'inactive',
+      updateLastActive({
         roomId: roomId as Id<'rooms'>,
         userId: user.userId,
       })
@@ -98,50 +106,61 @@ export const initPresence = () => {
   }, [])
 }
 
-export const manageNotifications = () => {
-  const { id } = useParams({ from: '/app/room/$id' })
-  const { data: notifications } = useSuspenseQuery(
-    roomNotificationsQueryOptions(id),
-  )
+export const monitorUsers = () => {
+  const room = useRoom()
+  const activeUsers = useActiveUsers()
+  const previousUsers = useRef<typeof activeUsers>(undefined)
+  const previousMembers = useRef<typeof room.members>(undefined)
+  const disconnectedUsers = useRef<typeof activeUsers>([])
 
   useEffect(() => {
-    if (notifications.length === 0) return
-    const notification = notifications[notifications.length - 1]
-    toast.message(notification.message, { duration: 1000 })
-  }, [notifications])
-}
-
-
-export const monitorUsersStatus = () => {
-  const { id } = useParams({ from: '/app/room/$id' })
-  const monitor = useMutation(api.rooms.monitorUsersStatus)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      monitor({ roomId: id as Id<'rooms'> })
-    }, 5000)
-
-    return () => clearInterval(interval)
-  }, [])
-}
-
-export const handleReconnection = () => {
-  const { id } = useParams({ from: '/app/room/$id' })
-  const user = useRoomUser()
-  const online = useConnectionStatus()
-  const handleReconnect = useMutation(api.rooms.handleReconnect)
-
-  useEffect(() => {
-    const handleOnline = () => {
-      console.log('handling reconnection');
-      handleReconnect({ roomId: id as Id<'rooms'>, userId: user.userId })
+    if (!previousUsers.current) {
+      previousUsers.current = activeUsers
+      return
     }
+    const inactiveUsers = previousUsers.current.filter(
+      (p1) =>
+        !activeUsers.some((p2) => p1.userId === p2.userId) &&
+        room.members.some((p3) => p3.userId === p1.userId),
+    )
 
-    window.addEventListener('online', handleOnline)
+    const reConnectedUsers = disconnectedUsers.current.filter((p1) =>
+      activeUsers.some((p2) => p1.userId === p2.userId),
+    )
 
-    if(online) handleOnline()
+    reConnectedUsers.forEach((user) => {
+      toast.message(`${user.username} has reconnected`, { duration: 1000 })
+    })
 
-    return () => {
-      window.removeEventListener('online', handleOnline)
+    inactiveUsers.forEach((user) => {
+      toast.error(`${user.username} has disconnected`, { duration: 1000 })
+      disconnectedUsers.current = [...disconnectedUsers.current, user]
+    })
+
+    disconnectedUsers.current = disconnectedUsers.current.filter(
+      (p1) => !activeUsers.some((p2) => p2.userId === p1.userId),
+    )
+    previousUsers.current = activeUsers
+  }, [activeUsers])
+
+  useEffect(() => {
+    if (!previousMembers.current) {
+      previousMembers.current = room.members
+      return
     }
-  }, [])
+    const usersLeft = previousMembers.current.filter(
+      (p1) => !room.members.some((p2) => p1.userId === p2.userId),
+    )
+    const usersJoined = room.members.filter(p1 => !previousMembers.current!.some(p2 => p1.userId === p2.userId))
+
+    usersJoined.forEach((user) => {
+      toast.message(`${user.username} has joined the room`, { duration: 1000 })
+    })
+
+    usersLeft.forEach((user) => {
+      toast.message(`${user.username} has left the room`, { duration: 1000 })
+    })
+
+    previousMembers.current = room.members
+  }, [room.members])
 }

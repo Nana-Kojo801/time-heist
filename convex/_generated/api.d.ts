@@ -13,9 +13,9 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as games from "../games.js";
 import type * as gamesHistory from "../gamesHistory.js";
 import type * as roomChats from "../roomChats.js";
-import type * as roomNotifications from "../roomNotifications.js";
 import type * as rooms from "../rooms.js";
 import type * as users from "../users.js";
 
@@ -28,9 +28,9 @@ import type * as users from "../users.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  games: typeof games;
   gamesHistory: typeof gamesHistory;
   roomChats: typeof roomChats;
-  roomNotifications: typeof roomNotifications;
   rooms: typeof rooms;
   users: typeof users;
 }>;

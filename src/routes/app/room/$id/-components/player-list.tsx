@@ -2,11 +2,15 @@ import { Users } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { containerVariants, itemVariants } from './animations'
-import { useRoom } from '../../-utils'
+import { useActiveUsers, useRoom } from '../../-utils'
 import UserAvatar from '@/components/user-avatar'
 
 export function PlayerList() {
   const room = useRoom()
+  const activeUsers = useActiveUsers()
+  const isActiveUser = (userId: string) => {
+    return activeUsers.some((user) => user.userId === userId)
+  }
   return (
     <motion.div
       variants={itemVariants}
@@ -63,13 +67,13 @@ export function PlayerList() {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              {player.ready ? (
+              {isActiveUser(player.userId) ? (
                 <span className="text-sm bg-green-500/20 text-green-500 px-3 py-1 rounded-full">
-                  Ready
+                  Active
                 </span>
               ) : (
                 <span className="text-sm bg-rose-500/10 text-rose-500 px-3 py-1 rounded-full">
-                  Not Ready
+                  Not active
                 </span>
               )}
             </div>
