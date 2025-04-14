@@ -2,13 +2,11 @@ import { motion } from "framer-motion"
 import { Target } from "lucide-react"
 import { formatTime } from "./utils"
 import { itemVariants, pulseVariants } from "./animations"
+import { useGame, useTimer } from "./hooks"
 
-interface TimerDisplayProps {
-  time: number
-  gameStatus: string
-}
-
-export function TimerDisplay({ time, gameStatus }: TimerDisplayProps) {
+export function TimerDisplay() {
+  const game = useGame()
+  const timer = useTimer()
   return (
     <motion.div 
       className="flex flex-col items-center gap-4 mb-6"
@@ -37,7 +35,7 @@ export function TimerDisplay({ time, gameStatus }: TimerDisplayProps) {
             strokeLinecap="round"
             initial={{ pathLength: 0 }}
             animate={{ 
-              pathLength: (time % 60000) / 60000,
+              pathLength: (timer % 60000) / 60000,
               transition: { duration: 0.01, ease: "linear" }
             }}
           />
@@ -49,10 +47,10 @@ export function TimerDisplay({ time, gameStatus }: TimerDisplayProps) {
             animate={{ scale: [1, 1.02, 1] }}
             transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
           >
-            {formatTime(time)}
+            {formatTime(timer)}
           </motion.div>
           <div className="text-xs text-muted-foreground">
-            {gameStatus === 'running' ? 'RUNNING' : gameStatus === 'paused' ? 'PAUSED' : 'READY'}
+            {game.state === 'playing' ? 'RUNNING' : 'FINISHED'}
           </div>
         </motion.div>
       </motion.div>

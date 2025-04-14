@@ -2,7 +2,7 @@ import { v } from 'convex/values'
 import { mutation, query } from './_generated/server'
 import { api } from './_generated/api'
 
-const roles = ['Leader', 'Lookout', 'Technician', 'Safecracker']
+const roles: ('Leader' | 'Lookout' | 'Technician' | 'Safecracker')[] = ['Leader', 'Lookout', 'Technician', 'Safecracker']
 
 export const create = mutation({
   args: {
@@ -113,7 +113,7 @@ export const joinRoom = mutation({
     if (room.members.find((member) => member.userId === userId)) return
     const role = roles.filter(
       (role) => !room.members.map((member) => member.role).includes(role),
-    )[0]
+    )[0] as typeof room.members[number]['role']
     await ctx.db.patch(roomId, {
       members: [
         ...room.members,
@@ -165,7 +165,7 @@ export const updateUserRole = mutation({
 
     await ctx.db.patch(room._id, {
       members: room.members.map((member) =>
-        member.userId === userId ? { ...member, role } : member,
+        member.userId === userId ? { ...member, role: role as 'Leader' | 'Lookout' | 'Technician' | 'Safecracker' } : member,
       ),
     })
   },

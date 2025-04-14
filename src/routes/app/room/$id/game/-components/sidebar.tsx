@@ -2,23 +2,19 @@ import { motion } from "framer-motion"
 import { TeamStatus } from "./team-status"
 import { PlayerAbilities } from "./player-abilities"
 import { itemVariants } from "./animations"
-import type { GamePlayer, PlayerRole } from "./types"
-import { roleAbilities } from "./mock-data"
+import { roleAbilities } from "./utils"
+import { useGameUser } from "./hooks"
 
-interface SidebarProps {
-  players: GamePlayer[]
-  currentPlayerRole: PlayerRole
-}
-
-export function Sidebar({ players, currentPlayerRole }: SidebarProps) {
-  const currentAbilities = roleAbilities[currentPlayerRole] || []
+export function Sidebar() {
+  const user = useGameUser()
+  const currentAbilities = roleAbilities[user.role]
 
   return (
     <motion.div 
       className="flex flex-col h-full gap-4"
       variants={itemVariants}
     >
-      <TeamStatus players={players} />
+      <TeamStatus />
       <PlayerAbilities abilities={currentAbilities} />
     </motion.div>
   )

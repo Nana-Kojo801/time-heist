@@ -21,22 +21,27 @@ export default defineSchema({
     private: v.boolean(),
     password: v.optional(v.string()),
     ownerId: v.id('users'),
-    state: v.union(v.literal("idle"), v.literal("playing")),
+    state: v.union(v.literal('idle'), v.literal('playing')),
     members: v.array(
       v.object({
         userId: v.id('users'),
         username: v.string(),
         avatar: v.string(),
-        role: v.string(),
+        role: v.union(
+          v.literal('Leader'),
+          v.literal('Safecracker'),
+          v.literal('Lookout'),
+          v.literal('Technician'),
+        ),
         ready: v.boolean(),
-        lastActive: v.number()
+        lastActive: v.number(),
       }),
     ),
     gameSettings: v.object({
       minutes: v.number(),
       seconds: v.number(),
       milliseconds: v.number(),
-    })
+    }),
   })
     .searchIndex('search_name', {
       searchField: 'name',
@@ -47,7 +52,12 @@ export default defineSchema({
   games: defineTable({
     roomId: v.id('rooms'),
     startTime: v.number(),
-    state: v.union(v.literal("waiting"), v.literal("playing"), v.literal("finished")),
+    state: v.union(
+      v.literal('waiting'),
+      v.literal('starting'),
+      v.literal('playing'),
+      v.literal('finished'),
+    ),
     timeWindows: v.array(v.string()),
     players: v.array(
       v.object({
@@ -57,15 +67,15 @@ export default defineSchema({
           v.object({
             timeWindow: v.string(),
             accuracy: v.float64(),
-            status: v.string(),
+            status: v.union(v.literal('SUCCESS'), v.literal('MISS')),
           }),
         ),
       }),
     ),
   }),
   roomChats: defineTable({
-    roomId: v.id("rooms"),
-    userId: v.id("users"),
-    message: v.string()
-  })
+    roomId: v.id('rooms'),
+    userId: v.id('users'),
+    message: v.string(),
+  }),
 })

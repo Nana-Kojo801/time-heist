@@ -17,6 +17,7 @@ import type * as games from "../games.js";
 import type * as gamesHistory from "../gamesHistory.js";
 import type * as roomChats from "../roomChats.js";
 import type * as rooms from "../rooms.js";
+import type * as serverTime from "../serverTime.js";
 import type * as users from "../users.js";
 
 /**
@@ -32,6 +33,7 @@ declare const fullApi: ApiFromModules<{
   gamesHistory: typeof gamesHistory;
   roomChats: typeof roomChats;
   rooms: typeof rooms;
+  serverTime: typeof serverTime;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

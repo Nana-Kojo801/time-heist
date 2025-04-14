@@ -3,16 +3,8 @@ import { itemVariants, glowVariants } from "./animations"
 import { TimerDisplay } from "./timer-display"
 import { TimeWindows } from "./time-windows"
 import { GameControls } from "./game-controls"
-import type { TimeWindow, PlayerRole } from "./types"
 
-interface GameBoardProps {
-  time: number
-  gameStatus: string
-  currentPlayerRole: PlayerRole
-  timeWindows: TimeWindow[]
-}
-
-export function GameBoard({ time, gameStatus, currentPlayerRole, timeWindows }: GameBoardProps) {
+export function GameBoard() {
   return (
     <motion.div 
       className="lg:col-span-2 h-full"
@@ -48,13 +40,13 @@ export function GameBoard({ time, gameStatus, currentPlayerRole, timeWindows }: 
         />
 
         {/* Timer Display */}
-        <TimerDisplay time={time} gameStatus={gameStatus} />
+        <TimerDisplay />
 
         {/* Time Windows */}
-        <TimeWindows timeWindows={timeWindows} />
+        <TimeWindows />
 
         {/* Main Controls */}
-        <GameControls gameStatus={gameStatus} currentPlayerRole={currentPlayerRole} />
+        <GameControls />
       </motion.div>
     </motion.div>
   )
