@@ -18,25 +18,89 @@ export default defineConfig({
       manifest: {
         name: 'Time Heist',
         short_name: 'Time Heist',
-        description: 'Your game description here', // Required for some browsers
+        description: 'Time Heist is an action-packed game where players race against time to complete thrilling missions and outsmart enemies.',
         theme_color: '#121a2b',
         background_color: '#121a2b',
-        display: 'standalone',
-        orientation: 'portrait', // Recommended for games
+        display: 'fullscreen',
+        orientation: 'portrait',
         start_url: '/',
         scope: '/',
         icons: [
           {
-            src: '/web-app-manifest-192x192.png',
-            sizes: '192x192',
+            src: '/icon-48x48.png',
+            sizes: '48x48',
             type: 'image/png',
-            purpose: 'any maskable',
           },
           {
-            src: '/web-app-manifest-512x512.png',
+            src: '/icon-72x72.png',
+            sizes: '72x72',
+            type: 'image/png',
+          },
+          {
+            src: '/icon-96x96.png',
+            sizes: '96x96',
+            type: 'image/png',
+          },
+          {
+            src: '/icon-128x128.png',
+            sizes: '128x128',
+            type: 'image/png',
+          },
+          {
+            src: '/icon-144x144.png',
+            sizes: '144x144',
+            type: 'image/png',
+          },
+          {
+            src: '/icon-152x152.png',
+            sizes: '152x152',
+            type: 'image/png',
+          },
+          {
+            src: '/icon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+            purpose: 'any',
+          },
+          {
+            src: '/icon-256x256.png',
+            sizes: '256x256',
+            type: 'image/png',
+            purpose: 'any',
+          },
+          {
+            src: '/icon-384x384.png',
+            sizes: '384x384',
+            type: 'image/png',
+            purpose: 'any',
+          },
+          {
+            src: '/icon-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any maskable',
+            purpose: 'any',
+          },
+        ],
+        screenshots: [
+          {
+            src: '/screenshot-1.png',
+            sizes: '414x896',
+            type: 'image/png',
+          },
+          {
+            src: '/screenshot-2.png',
+            sizes: '414x896',
+            type: 'image/png',
+          },
+          {
+            src: '/screenshot-3.png',
+            sizes: '414x896',
+            type: 'image/png',
+          },
+          {
+            src: '/screenshot-4.png',
+            sizes: '414x896',
+            type: 'image/png',
           },
         ],
       },
@@ -50,7 +114,7 @@ export default defineConfig({
               cacheName: 'google-fonts-cache',
               expiration: {
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+                maxAgeSeconds: 60 * 60 * 24 * 365,
               },
               cacheableResponse: {
                 statuses: [0, 200],
